@@ -1,0 +1,63 @@
+from odoo import models, fi    def action_sold(self):
+        """Mark property as sold and create invoice"""
+        # 1. Explicit Security Check - Only Agents/Managers can do this
+        if not self.env.user.has_group('estate.estate_group_user'):
+            raise AccessError("Only Agents and Managers can mark properties as sold!")
+        
+        # 2. Check user has write access to this specific record
+        self.check_access('write')
+        
+        # 3. Print to verify security check runs first
+        print("=" * 50)
+        print(" SECURITY CHECK PASSED ".center(50, '='))
+        print("=" * 50)
+        
+        # 4. Create invoice with sudo (bypassing invoice permissions)
+        # Note: This assumes you have account module and invoice logic
+        # If you don't have estate_account, just update state
+        if self.env['ir.module.module'].search([('name', '=', 'account'), ('state', '=', 'installed')]):
+            try:
+                invoice_vals = {
+                    'partner_id': self.env.user.partner_id.id,
+                    'move_type': 'out_invoice',
+                    'invoice_date': fields.Date.today(),
+                    'invoice_line_ids': [(0, 0, {
+                        'name': f"Property: {self.name}",
+                        'quantity': 1,
+                        'price_unit': self.selling_price or self.expected_price,
+                    })],
+                }
+                # Bypass security with sudo()
+                invoice = self.env['account.move'].sudo().create(invoice_vals)
+                self.invoice_id = invoice.id
+            except Exception as e:
+                # If account module not fully configured, just update state                pass
+        
+        # 5. Update state
+        self.state = 'sold'elds
+
+class EstateProperty(models.Model):
+    _name = "estate.property"
+    _description = "Real Estate Property"
+    
+    name = fields.Char(string="Title", required=True)
+    description = fields.Text(string="Description")
+    postcode= fields.Char(string="Postcode")
+    date_availability = fields.Date(string="Date")
+    expected_price = fields.Float(string="Expected Price", required=True)
+    selling_price = fields.Float(string="Selling Price")
+    bedrooms = fields.Integer(string="Bedrooms")
+    living_area = fields.Integer(string="Living Area (sqm)")
+    facades = fields.Integer(string="Facades")
+    garage = fields.Boolean(string="Garage")
+    garden = fields.Boolean(string="Garden")
+    garden_area = fields.Integer(string="Garden Area (sqm)")
+    garden_orientation = fields.Selection(
+        string='Garden Orientation',
+        selection=[
+            ('north', 'North'),
+            ('south', 'South'),
+            ('east', 'East'),
+            ('west', 'West')
+        ]
+    }

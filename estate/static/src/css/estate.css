@@ -1,0 +1,131 @@
+/* =========================== */
+/* STYLE FOR "ADD A LINE" BUTTON */
+/* =========================== */
+
+/* Style the Add a line button in One2Many fields */
+.o_field_one2many .o_list_view .o_list_editable .o_add_row {
+    color: #714B67 !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    padding: 8px 12px !important;
+    border-radius: 4px !important;
+    background-color: transparent !important;
+    transition: all 0.2s ease !important;
+    border: 1px dashed #ddd !important;
+    margin: 8px 0 !important;
+}
+
+.o_field_one2many .o_list_view .o_list_editable .o_add_row:hover {
+    background-color: #F0EFF0 !important;
+    color: #714B67 !important;
+    border-color: #714B67 !important;
+}
+
+/* Style the "+" icon */
+.o_field_one2many .o_list_view .o_list_editable .o_add_row .o_icon {
+    font-size: 16px !important;
+    margin-right: 8px !important;
+    font-weight: bold !important;
+}
+
+/* =========================== */
+/* SPACING BETWEEN TAGS AND POSTCODE */
+/* =========================== */
+
+/* Add more space between tags and main content */
+.oe_title .o_row {
+    margin-bottom: 32px !important;
+}
+
+/* Add spacing after the title section */
+.oe_title {
+    margin-bottom: 16px !important;
+}
+
+/* Optional: Add a subtle divider */
+.oe_title + .group {
+    border-top: 1px solid #e8e8e8;
+    padding-top: 16px;
+}
+
+/* =========================== */
+/* STYLE FOR TAGS */
+/* =========================== */
+
+/* Make tags look nicer */
+.o_field_many2many_tags .badge {
+    font-size: 12px !important;
+    padding: 6px 12px !important;
+    border-radius: 16px !important;
+    margin: 2px 4px !important;
+}
+
+/* =========================== */
+/* STYLE FOR THE OFFERS LIST */
+/* =========================== */
+
+/* Style the offers table header */
+.o_list_view thead th {
+    background-color: #f8f8f8 !important;
+    font-weight: 600 !important;
+    padding: 8px 12px !important;
+}
+
+/* Style the offers rows */
+.o_list_view tbody td {
+    padding: 8px 12px !important;
+    vertical-align: middle !important;
+}
+
+/* =========================== */
+/* STYLE FOR STATUS BADGES */
+/* =========================== */
+
+/* Custom status badge colors */
+.badge.badge-success {
+    background-color: #28a745 !important;
+}
+
+.badge.badge-danger {
+    background-color: #dc3545 !important;
+}
+
+.badge.badge-warning {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+}
+
+.badge.badge-info {
+    background-color: #17a2b8 !important;
+}
+
+.badge.badge-secondary {
+    background-color: #6c757d !important;
+}
+
+/* =========================== */
+/* BUTTON STYLES */
+/* =========================== */
+
+/* Style the header buttons */
+.btn-primary {
+    background-color: #714B67 !important;
+    border-color: #714B67 !important;
+}
+
+.btn-primary:hover {
+    background-color: #5a3a52 !important;
+    border-color: #5a3a52 !important;
+}
+
+/* =========================== */
+/* RESPONSIVE ADJUSTMENTS */
+/* =========================== */
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .oe_title .o_row {
+        margin-bottom: 16px !important;
+    }
+}
+
