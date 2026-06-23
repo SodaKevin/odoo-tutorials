@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Odoo 18",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceRoot}/odoo-bin",
+            "args": [
+                "--addons-path=addons,addons/tutorials",
+                "-d", "estate_db",
+                "-u", "estate",
+                "--limit-time-real=600",
+                "--limit-time-cpu=600",
+                "--workers=0"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": false
+        }
+    ]
+}
