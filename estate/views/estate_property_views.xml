@@ -7,7 +7,13 @@
         <field name="name">estate.property.list</field>
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
-            <list string="Properties" create="true" edit="true" delete="true">
+        <list string="Properties"
+            create="true"
+            edit="true"
+            delete="true"
+            decoration-success="state in ('offer_received', 'offer_accepted')"
+            decoration-bf="state == 'offer_accepted'"
+            decoration-muted="state == 'sold'">
                 <field name="name" string="Property"/>
                 <field name="expected_price" string="Expected Price"/>
                 <field name="state" string="Status" widget="badge"/>
@@ -15,7 +21,7 @@
                 <field name="living_area" string="Area (sqm)"/>
                 <field name="garage" string="Garage"/>
                 <field name="garden" string="Garden"/>
-                <field name="date_availability" string="Available From"/>
+                <field name="date_availability" string="Available From" optional="hide"/>
                 <field name="tag_ids" widget="many2many_tags"/>
             </list>
         </field>
@@ -37,6 +43,9 @@
                 <field name="property_type_id"/>
                 <field name="tag_ids"/>
                 <field name="bedrooms"/>
+                <field name="living_area"
+                    string="Living Area"
+                    filter_domain="[('living_area', '>=', self)]"/>
                 <field name="offer_ids" string="Offers"/>
                 
                 <!-- Filters -->
@@ -122,8 +131,8 @@
                         <group>
                             <field name="postcode" placeholder="Postcode..."/>
                             <field name="date_availability"/>
-                            <field name="property_type_id"/>
-                            <field name="state" widget="selection" readonly="1"/>
+                            <field name="property_type_id"
+                                options="{'no_create': True, 'no_create_edit': True}"/>
                         </group>
                         <group>
                             <field name="expected_price" widget="monetary"/>
@@ -180,7 +189,8 @@
 
                         <!-- TAB 3: Offers -->
                         <page string="Offers">
-                            <field name="offer_ids"/>
+                            <field name="offer_ids"
+                                readonly="state in ('offer_accepted','sold','canceled')"/>
                         </page>
                     </notebook>
                 </sheet>
@@ -195,7 +205,10 @@
         <field name="name">estate.property.off  er.list</field>
         <field name="model">estate.property.offer</field>
         <field name="arch" type="xml">
-            <list string="Offers">
+        <list string="Offers"
+            editable="bottom"
+            decoration-danger="status == 'refused'"
+            decoration-success="status == 'accepted'">
                 <field name="price" sum="Total Offers" widget="monetary"/>
                 <field name="partner_id"/>
                 <field name="validity" string="Validity (days)"/>
@@ -213,7 +226,7 @@
                         title="Refuse"
                         invisible="status in ('accepted','refused')"/>
 
-                <field name="status" widget="badge"/>
+                <field name="status" column_invisible="True"/>
             </list>
         </field>
     </record>
@@ -252,7 +265,12 @@
     <record id="action_estate_property" model="ir.actions.act_window">
         <field name="name">Properties</field>
         <field name="res_model">estate.property</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="context">
+        {
+            'search_default_available': 1,
+        }
+        </field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create your first property!
@@ -268,6 +286,7 @@
         <field name="model">estate.property.type</field>
         <field name="arch" type="xml">
             <list string="Property Types">
+                <field name="sequence" widget="handle"/>
                 <field name="name"/>
             </list>
         </field>
@@ -306,7 +325,7 @@
         <field name="name">estate.property.tag.list</field>
         <field name="model">estate.property.tag</field>
         <field name="arch" type="xml">
-            <list string="Property Tags">
+            <list string="Property Tags" editable="bottom">
                 <field name="name"/>
             </list>
         </field>
@@ -330,6 +349,48 @@
         <field name="name">Property Tags</field>
         <field name="res_model">estate.property.tag</field>
         <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="estate_property_view_kanban" model="ir.ui.view">
+        <field name="name">estate.property.kanban</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+        <kanban default_group_by="property_type_id"
+                records_draggable="false"
+                groups_draggable="false">
+            <field name="state"/>
+            <field name="expected_price"/>
+            <field name="best_offer"/>
+            <field name="selling_price"/>
+            <field name="tag_ids"/>
+
+            <templates>
+                <t t-name="kanban-box">
+                    <div class="oe_kanban_global_click">
+                        <strong>
+                            <field name="name"/>
+                        </strong>
+                        <div>
+                            Expected:
+                            <field name="expected_price"/>
+                        </div>
+                        <div t-if="record.state.raw_value == 'offer_received'">
+                            Best Offer:
+                            <field name="best_offer"/>
+                        </div>
+                        <div t-if="record.state.raw_value == 'offer_accepted'">
+                            Selling Price:
+                            <field name="selling_price"/>
+                        </div>
+                        <div>
+                            <field name="tag_ids"
+                                widget="many2many_tags"/>
+                        </div>
+                    </div>
+                </t>
+            </templates>
+        </kanban>
+        </field>
     </record>
 
     <!-- =========================== -->

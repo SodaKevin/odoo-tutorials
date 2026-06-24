@@ -5,7 +5,7 @@ class EstatePropertyType(models.Model):
     _description = "Property Type"
     
     name = fields.Char(string="Name", required=True)
-    _order = "name"
+    _order = "sequence, name"
 
     # ─── Relational Fields ─────────────────────────────────────────
     company_id = fields.Many2one(
@@ -48,6 +48,11 @@ class EstatePropertyType(models.Model):
         'estate.property',
         'property_type_id',
         string='Properties'
+    )
+
+    sequence = fields.Integer(
+        string="Sequence",
+        default=10
     )
 
     _sql_constraints = [

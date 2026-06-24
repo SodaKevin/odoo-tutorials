@@ -6,6 +6,7 @@ from datetime import timedelta
 class EstateProperty(models.Model):
     _name = "estate.property"
     _description = "Real Estate Property"
+    _order = "id desc"
     _check_company_auto = True
 
     # ─── Active Field ──────────────────────────────────────────────────
@@ -206,4 +207,12 @@ class EstateProperty(models.Model):
             ) < 0:
                 raise ValidationError(
                     "The selling price cannot be lower than 90% of the expected price."
+                )
+            
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_not_new_or_cancelled(self):
+        for property in self:
+            if property.state not in ('new', 'canceled'):
+                raise UserError(
+                    "Only new or cancelled properties can be deleted."
                 )
